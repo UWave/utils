@@ -3,6 +3,8 @@
 import sys
 import MySQLdb
 from ConfigParser import SafeConfigParser
+import os
+import json
 
 showname = ""
 
@@ -47,6 +49,12 @@ def mkbutton(show):
 
     c.close()
     db.commit()
+
+    with open('%s/.config/recorded_carts.json' % os.getenv("HOME"), 'r+') as recorded_carts_file:
+        existingcarts = json.load(recorded_carts_file)
+        existingcarts.append(nextShowCart)
+        json.dump(existingcarts, recorded_carts_file)
+        print("Added cart %0.d to list of recorded carts" % nextShowCart)
 
 if __name__ == "__main__":
     mkbutton(showname)
