@@ -44,9 +44,13 @@ def mkbutton(show):
     nextMacroCart = c.fetchone()[0] + 1
     macroCartName = "Record %s" % show
 
-    macros = "RS 1 0%0.d 1 7500000!TA f 1!SN now 1 0%0.d!PM 3!PX 1 050016!" % (nextShowCart,
-                                                                               nextShowCart)
-
+    macros = "".join([
+        "RS 1 0%0.d 1 7500000!" % nextShowCart,
+        "TA f 1!",
+        "SN now 1 0%0.d!" % nextShowCart,
+        "PM 3!",
+        "LB %s!" % showname.replace("!", ""),
+        "PX 1 050016!"])
     print("Making cart %0.d named %s" % (nextMacroCart, macroCartName))
 
     c.execute("INSERT INTO CART(`NUMBER`, `TYPE`, `GROUP_NAME`, `TITLE`, `MACROS`) VALUES (%s, 2, 'MACROS', %s, %s)", (nextMacroCart, macroCartName, macros))
