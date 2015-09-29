@@ -50,9 +50,12 @@ def mkbutton(show):
     c.close()
     db.commit()
 
-    with open('%s/.config/recorded_carts.json' % os.getenv("HOME"), 'r+') as recorded_carts_file:
+    with open('%s/.config/recorded_carts.json' % os.getenv("HOME")) as recorded_carts_file:
         existingcarts = json.load(recorded_carts_file)
-        existingcarts.append(nextShowCart)
+
+    existingcarts.append(nextShowCart)
+
+    with open('%s/.config/recorded_carts.json' % os.getenv("HOME"), 'w') as recorded_carts_file:
         json.dump(existingcarts, recorded_carts_file)
         print("Added cart %0.d to list of recorded carts" % nextShowCart)
 
