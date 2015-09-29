@@ -31,17 +31,21 @@ def mkbutton(show):
 
     nextShowCart = c.fetchone()[0] + 1
 
-    print("Making cart %0.d for storing show %s" % (nextShowCart, showname))
+    print("Making cart %0.d for storing show %s" % (nextShowCart, show))
 
-    c.execute("INSERT INTO CART(`NUMBER`, `TYPE`, `GROUP_NAME`, `TITLE`) VALUES (%s, 1, 'SHOWS', %s);", (nextShowCart, showname,))
+    c.execute("INSERT INTO CART(`NUMBER`, `TYPE`, `GROUP_NAME`, `TITLE`) VALUES (%s, 1, 'SHOWS', %s);", (nextShowCart, show,))
+
+    print("Making cut in cart %0.d" % nextShowCart)
+
+    c.execute("INSERT INTO `CUTS` (`CUT_NAME`, `CART_NUMBER`, `EVERGREEN`, `DESCRIPTION`, `OUTCUE`, `ISRC`, `ISCI`, `LENGTH`, `ORIGIN_DATETIME`, `START_DATETIME`, `END_DATETIME`, `SUN`, `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `START_DAYPART`, `END_DAYPART`, `ORIGIN_NAME`, `WEIGHT`, `LAST_PLAY_DATETIME`, `UPLOAD_DATETIME`, `PLAY_COUNTER`, `LOCAL_COUNTER`, `VALIDITY`, `CODING_FORMAT`, `SAMPLE_RATE`, `BIT_RATE`, `CHANNELS`, `PLAY_GAIN`, `START_POINT`, `END_POINT`, `FADEUP_POINT`, `FADEDOWN_POINT`, `SEGUE_START_POINT`, `SEGUE_END_POINT`, `SEGUE_GAIN`, `HOOK_START_POINT`, `HOOK_END_POINT`, `TALK_START_POINT`, `TALK_END_POINT`) VALUES('0%0.d_001', %0.d, 'N', 'Cut 001', '', '', '', 3808, '2000-01-01 00:00:00', NULL, NULL, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', NULL, NULL, 'hill', 1, NULL, NULL, 0, 0, 2, 0, 44100, 128000, 2, 0, 0, 3808, -1, -1, -1, -1, -3000, -1, -1, -1, -1);" % (nextShowCart, nextShowCart))
 
     c.execute("SELECT NUMBER FROM CART WHERE `GROUP_NAME` = 'MACROS' AND NUMBER < 59999 ORDER BY NUMBER DESC LIMIT 1;")
 
     nextMacroCart = c.fetchone()[0] + 1
-    macroCartName = "Record %s" % showname
+    macroCartName = "Record %s" % show
 
     macros = "RS 1 0%0.d 1 7500000!TA f 1!SN now 1 0%0.d!PM 3!PX 1 050016!" % (nextShowCart,
-                                                                             nextShowCart)
+                                                                               nextShowCart)
 
     print("Making cart %0.d named %s" % (nextMacroCart, macroCartName))
 
