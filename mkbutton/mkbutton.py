@@ -45,12 +45,12 @@ def mkbutton(show):
     macroCartName = "Record %s" % show
 
     macros = "".join([
-        "RS 1 0%0.d 1 7500000!" % nextShowCart,
-        "TA f 1!",
-        "SN now 1 0%0.d!" % nextShowCart,
-        "PM 3!",
-        "LB %s!" % showname.replace("!", ""),
-        "PX 1 050016!"])
+        "RS 1 0%0.d 1 7500000!" % nextShowCart,  # Record on deck 1 to nextShowCart cut 1 for up to 7500000 ms (just over 2 hours)
+        "TA 1!",  # Toggle the on air flag
+        "SN now 1 0%0.d!" % nextShowCart,  # Set the current cart to now cart to nextShowCart
+        "PM 3!",  # Set mode to manual (1 = LiveAssist, 2 = Auto, 3 = Manual)
+        "LB %s!" % showname.replace("!", ""),  # Set the label in RDAirPlay to the show name
+        "PX 1 050016!"])  # Insert cart 050016 (the "stop recording" cart) to the next position
     print("Making cart %0.d named %s" % (nextMacroCart, macroCartName))
 
     c.execute("INSERT INTO CART(`NUMBER`, `TYPE`, `GROUP_NAME`, `TITLE`, `MACROS`) VALUES (%s, 2, 'MACROS', %s, %s)", (nextMacroCart, macroCartName, macros))
