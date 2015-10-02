@@ -1,0 +1,11 @@
+{
+  "name": "PhysicalAccessRequest",
+  "version": "0.0.1",
+  "description": "A tool to generate PDFs of the paperwork to request access to rooms at UW Bothell",
+  "main": "generate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Finn Herzfeld <finn@uwave.fm>",
+  "license": "GPLv3"
+}
