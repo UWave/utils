@@ -1,7 +1,7 @@
 #!/usr/bin/env nodejs
 var hummus = require('hummus');
 
-function generateAccessRequest(args) {
+function generateAccessRequest(args, hours) {
   var pdfWriter = hummus.createWriterToModify('template.pdf', {modifiedFilePath:'output.pdf'});
   var pageModifier = new hummus.PDFPageModifier(pdfWriter, 0);
 
@@ -9,7 +9,10 @@ function generateAccessRequest(args) {
     name: [64, 592],
     idnumber: [345, 592],
     email: [64, 550],
-    phone: [280, 550]
+    phone: [280, 550],
+    advisor: [60, 390],
+    quarter: [60, 350],
+    hours: [345, 350]
   };
 
   for(var arg in args) {
@@ -33,5 +36,10 @@ generateAccessRequest({
   name: "Hasit",
   idnumber: 1111111,
   email: "finn@uwave.fm",
-  phone: "(202) 456-1414"
+  phone: "(202) 456-1414",
+  advisor: "Amoshaun Toft",
+  quarter: "Autum 2015",
+  hours: "8:00am to 10pm"
+}, {
+  hours: 24
 });
