@@ -40,6 +40,9 @@ function generateAccessRequest(args, hours) {
       break;
   }
 
+  ctx.drawCircle(164, 273, 4, {type: "fill"});
+  ctx.drawCircle(164, 301, 4, {type: "fill"});
+
   pageModifier.endContext().writePage();
 
   pdfWriter.end();
