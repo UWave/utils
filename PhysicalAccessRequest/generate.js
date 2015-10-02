@@ -15,15 +15,29 @@ function generateAccessRequest(args, hours) {
     hours: [345, 350]
   };
 
+  var ctx = pageModifier.startContext().getContext();
+
   for(var arg in args) {
     if(args.hasOwnProperty(arg) && boxlocations.hasOwnProperty(arg)) {
-      pageModifier.startContext().getContext().writeText(args[arg], boxlocations[arg][0], boxlocations[arg][1],  {
+      ctx.writeText(args[arg], boxlocations[arg][0], boxlocations[arg][1],  {
           font: pdfWriter.getFontForFile('./fonts/Ubuntu-L.ttf'),
           size: 14,
           colorspace: 'gray',
           color: 0x00
         });
     }
+  }
+
+  switch(hours) {
+    case 0:
+      ctx.drawCircle(409, 415, 4, {type: "fill"});
+      break;
+    case 1:
+      ctx.drawCircle(409, 401, 4, {type: "fill"});
+      break;
+    case 2:
+      ctx.drawCircle(409, 387, 4, {type: "fill"});
+      break;
   }
 
   pageModifier.endContext().writePage();
@@ -38,8 +52,5 @@ generateAccessRequest({
   email: "finn@uwave.fm",
   phone: "(202) 456-1414",
   advisor: "Amoshaun Toft",
-  quarter: "Autum 2015",
-  hours: "8:00am to 10pm"
-}, {
-  hours: 24
-});
+  quarter: "Autum 2015"
+}, 0);
