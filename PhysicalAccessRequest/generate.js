@@ -1,9 +1,7 @@
 #!/usr/bin/env nodejs
 var hummus = require('hummus');
 
-function generateAccessRequest(args, hours) {
-  var pdfWriter = hummus.createWriterToModify('template.pdf', {modifiedFilePath:'output.pdf'});
-  var pageModifier = new hummus.PDFPageModifier(pdfWriter, 0);
+function generateAccessRequest(pageModifier, args, hours) {
 
   var boxlocations = {
     name: [64, 592],
@@ -43,11 +41,10 @@ function generateAccessRequest(args, hours) {
   ctx.drawCircle(164, 273, 4, {type: "fill"});
   ctx.drawCircle(164, 301, 4, {type: "fill"});
 
-  pageModifier.endContext().writePage();
-
-  pdfWriter.end();
-
 }
+
+var pdfWriter = hummus.createWriterToModify('template.pdf', {modifiedFilePath:'output.pdf'});
+var pageModifier = new hummus.PDFPageModifier(pdfWriter, 0);
 
 generateAccessRequest({
   name: "Hasit",
@@ -57,3 +54,7 @@ generateAccessRequest({
   advisor: "Amoshaun Toft",
   quarter: "Autum 2015"
 }, 0);
+
+pageModifier.endContext().writePage();
+
+pdfWriter.end();
