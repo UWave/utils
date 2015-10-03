@@ -43,10 +43,10 @@ function generateAccessRequest(pageModifier, args, hours) {
 
 }
 
-var pdfWriter = hummus.createWriterToModify('templates/keyrequest.pdf', {modifiedFilePath:'output.pdf'});
+var pdfWriter = hummus.createWriterToModify('templates/accessrequest.pdf', {modifiedFilePath:'output.pdf'});
 var pageModifier = new hummus.PDFPageModifier(pdfWriter, 0);
 
-generateAccessRequest({
+generateAccessRequest(pageModifier, {
   name: "Hasit",
   idnumber: 1111111,
   email: "finn@uwave.fm",
