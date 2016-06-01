@@ -2,7 +2,7 @@
 import ConfigParser
 import MySQLdb
 import os
-
+import sys
 
 parser = ConfigParser.ConfigParser()
 parser.read("/etc/rd.conf")
@@ -26,6 +26,9 @@ conditions = "FROM CUTS WHERE ORIGIN_DATETIME < DATE_SUB(NOW(), INTERVAL 2 YEAR)
 
 cursor.execute("SELECT CUT_NAME %s" % conditions)
 for result in cursor.fetchall():
-    os.remove("/var/snd/%s.wav" % result[0])
+    try:
+        os.remove("/var/snd/%s.wav" % result[0])
+    except OSError:
+        sys.stderr.write("OMG %s doesn't exist!\n" % result[0])
 
 cursor.execute("DELETE %s" % conditions)
