@@ -31,4 +31,5 @@ for result in cursor.fetchall():
     except OSError:
         sys.stderr.write("OMG %s doesn't exist!\n" % result[0])
 
+cursor = db.cursor()
 cursor.execute("DELETE %s" % conditions)
