@@ -76,9 +76,9 @@ for cart_str in recorded_carts.keys():
                             baseURL = config['owncloud']['baseURL']
                             folder = urllib.quote_plus(action['folder'])
                             filename = "%s.wav" % datetime.datetime.today().strftime('%Y-%m-%d')
-                            files = {'file': (filename, open(new_cut.get_path(), 'rb'))}
-                            requests.put('%s/%s/%s' % (baseURL, folder, filename),
-                                         auth=auth, files=files)
+                            with open(new_cut.get_path(), 'rb') as fh:
+                                requests.put('%s/%s/%s' % (baseURL, folder, filename),
+                                             auth=auth, data=fh.read())
             # TODO: Other processing (e.g. converting to MP3, etc)
     except Exception:
         sentry.captureException()
