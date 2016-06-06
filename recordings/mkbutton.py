@@ -61,7 +61,7 @@ def mkbutton(show):
     with open('%s/.config/recorded_carts.json' % os.getenv("HOME")) as recorded_carts_file:
         existingcarts = json.load(recorded_carts_file)
 
-    existingcarts[nextShowCart] = None
+    existingcarts['recorded_carts'][nextShowCart] = None
 
     with open('%s/.config/recorded_carts.json' % os.getenv("HOME"), 'w') as recorded_carts_file:
         json.dump(existingcarts, recorded_carts_file)
