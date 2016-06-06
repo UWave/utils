@@ -101,7 +101,7 @@ for cart_str in recorded_carts.keys():
                         to_address = tuple(to_address)
                     message = emails.html(subject=JinjaTemplate(config['email']['subject']),
                                           html=JinjaTemplate(open(template).read()),
-                                          mail_from=tuple(config['email']['from']))
+                                          mail_from=from_address)
                     message.send(to=to_address, render=notification_data)
             # TODO: Other processing (e.g. converting to MP3, etc)
     except Exception:
