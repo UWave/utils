@@ -68,9 +68,11 @@ for cart_str in recorded_carts.keys():
             new_cut.set_valid_days(False, False, False, False, False, False, False)
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
             if type(recorded_carts[cart_str]) == list:
+                # Used for sending an email at the end
                 notification_data = {
                     "show_name": cart_obj.title
-                }  # Used for sending an email at the end
+                }
+
                 for action, data in recorded_carts[cart_str].iter_items():
                     debug("Processing action %s" % action, cart)
                     notification_data[action] = data
@@ -99,6 +101,9 @@ for cart_str in recorded_carts.keys():
                         template = config['email']['template']
                     if type(to_address) == list:
                         to_address = tuple(to_address)
+                    smtp = None
+                    if "smtp" in config['email']:
+                        smtp = config['email']['smtp']
                     message = emails.html(subject=JinjaTemplate(config['email']['subject']),
                                           html=JinjaTemplate(open(template).read()),
                                           mail_from=from_address)
