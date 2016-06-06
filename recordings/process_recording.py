@@ -65,8 +65,8 @@ for cart_str in recorded_carts.keys():
             new_cut.set_description(datetime.datetime.today().strftime('%Y-%m-%d'))
             new_cut.set_valid_days(False, False, False, False, False, False, False)
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
-            if type(recorded_carts[cart]) == list:
-                for action in recorded_carts[cart]:
+            if type(recorded_carts[cart_str]) == list:
+                for action in recorded_carts[cart_str]:
                     if "action" in action:
                         if action["action"] == "debug":
                             debug(str(action), cart)
