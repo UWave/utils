@@ -64,7 +64,8 @@ def mkbutton(show):
     existingcarts['recorded_carts'][nextShowCart] = None
 
     with open('%s/.config/recorded_carts.json' % os.getenv("HOME"), 'w') as recorded_carts_file:
-        json.dump(existingcarts, recorded_carts_file)
+        json.dump(existingcarts, recorded_carts_file, sort_keys=True, indent=4,
+                  separators=(',', ': '))
         print("Added cart %0.d to list of recorded carts" % nextShowCart)
 
 if __name__ == "__main__":
