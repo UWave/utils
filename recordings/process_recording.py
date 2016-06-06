@@ -9,6 +9,8 @@ import datetime
 from subprocess import call
 import syslog
 import raven
+import emails
+from emails.template import JinjaTemplate
 import requests
 
 config = json.load(open('%s/.config/recorded_carts.json' % os.getenv("HOME")))
@@ -39,6 +41,7 @@ def get_cut_fingerprint(cut):
     except Exception:
         sentry.captureException()
 
+# This monstrosity needs to be broken up into little functions
 for cart_str in recorded_carts.keys():
     cart = int(cart_str)
     try:
@@ -66,22 +69,38 @@ for cart_str in recorded_carts.keys():
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
             if type(recorded_carts[cart_str]) == list:
                 notification_data = {}  # Used for sending an email at the end
-                for action in recorded_carts[cart_str]:
-                    if "action" in action:
-                        debug("Processing action %s" % action, cart)
-                        if action["action"] == "debug":
-                            debug(str(action), cart)
-                        if action["action"] == "owncloud":
-                            auth = tuple(config['owncloud']['auth'])
-                            baseURL = config['owncloud']['baseURL']
-                            folder = action['folder']
-                            timeformat = "%Y-%m-%d_%H:%M:%S"
-                            filename = "%s.wav" % datetime.datetime.today().strftime(timeformat)
-                            with open(new_cut.get_path(), 'rb') as fh:
-                                requests.put('%s/%s/%s' % (baseURL, folder, filename),
-                                             auth=auth, data=fh.read())
-                            notification_data['owncloud'] = action
-                            notification_data['owncloud']['filename'] = filename
+                for action, data in recorded_carts[cart_str].iter_items():
+                    debug("Processing action %s" % action, cart)
+                    notification_data[action] = data
+                    if action == "debug":
+                        debug(str(action), cart)
+                    if action == "owncloud":
+                        auth = tuple(config['owncloud']['auth'])
+                        baseURL = config['owncloud']['baseURL']
+                        folder = data['folder']
+                        timeformat = "%Y-%m-%d_%H:%M:%S"
+                        filename = "%s.wav" % datetime.datetime.today().strftime(timeformat)
+                        with open(new_cut.get_path(), 'rb') as fh:
+                            requests.put('%s/%s/%s' % (baseURL, folder, filename),
+                                         auth=auth, data=fh.read())
+                        download = "%s/download?path=%2F&files=%s" % (data['owncloud_share_link'],
+                                                                      filename)
+                        notification_data['owncloud']['download_url'] = download
+                if "email" in recorded_carts[cart_str]:
+                    from_address = config['email']['from']
+                    if type(from_address) == list:
+                        from_address = tuple(from_address)
+                    to_address = recorded_carts[cart_str]['email']['to']
+                    template = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                            "email.html")
+                    if "template" in config['email']:
+                        template = config['email']['template']
+                    if type(to_address) == list:
+                        to_address = tuple(to_address)
+                    message = emails.html(subject=JinjaTemplate(config['email']['subject']),
+                                          html=JinjaTemplate(open(template).read()),
+                                          mail_from=tuple(config['email']['from']))
+                    message.send(to=to_address, render=notification_data)
             # TODO: Other processing (e.g. converting to MP3, etc)
     except Exception:
         sentry.captureException()
