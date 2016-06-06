@@ -9,6 +9,8 @@ import datetime
 from subprocess import call
 import syslog
 import raven
+import requests
+import urllib
 
 config = json.load(open('%s/.config/recorded_carts.json' % os.getenv("HOME")))
 sentry = raven.Client(config['dsn'])
@@ -68,6 +70,14 @@ for cart_str in recorded_carts.keys():
                     if "action" in action:
                         if action["action"] == "debug":
                             debug(str(action), cart)
+                        if action["action"] == "owncloud":
+                            auth = tuple(config['owncloud']['auth'])
+                            baseURL = config['owncloud']['baseURL']
+                            folder = urllib.quote_plus(action['folder'])
+                            filename = "%s.wav" % datetime.datetime.today().strftime('%Y-%m-%d')
+                            files = {'file': (filename, open(new_cut.get_path(), 'rb'))}
+                            requests.put('%s/%s/%s' % (baseURL, folder, filename),
+                                         auth=auth, files=files)
             # TODO: Other processing (e.g. converting to MP3, etc)
     except Exception:
         sentry.captureException()
