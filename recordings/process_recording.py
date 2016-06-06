@@ -68,7 +68,9 @@ for cart_str in recorded_carts.keys():
             new_cut.set_valid_days(False, False, False, False, False, False, False)
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
             if type(recorded_carts[cart_str]) == list:
-                notification_data = {}  # Used for sending an email at the end
+                notification_data = {
+                    "show_name": cart_obj.title
+                }  # Used for sending an email at the end
                 for action, data in recorded_carts[cart_str].iter_items():
                     debug("Processing action %s" % action, cart)
                     notification_data[action] = data
