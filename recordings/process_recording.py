@@ -68,6 +68,7 @@ for cart_str in recorded_carts.keys():
             if type(recorded_carts[cart_str]) == list:
                 for action in recorded_carts[cart_str]:
                     if "action" in action:
+                        debug("Processing action %s" % action, cart)
                         if action["action"] == "debug":
                             debug(str(action), cart)
                         if action["action"] == "owncloud":
