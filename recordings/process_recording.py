@@ -74,7 +74,7 @@ for cart_str in recorded_carts.keys():
                         if action["action"] == "owncloud":
                             auth = tuple(config['owncloud']['auth'])
                             baseURL = config['owncloud']['baseURL']
-                            folder = urllib.quote_plus(action['folder'])
+                            folder = action['folder']
                             filename = "%s.wav" % datetime.datetime.today().strftime('%Y-%m-%d')
                             with open(new_cut.get_path(), 'rb') as fh:
                                 requests.put('%s/%s/%s' % (baseURL, folder, filename),
