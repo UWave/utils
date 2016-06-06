@@ -10,7 +10,6 @@ from subprocess import call
 import syslog
 import raven
 import requests
-import urllib
 
 config = json.load(open('%s/.config/recorded_carts.json' % os.getenv("HOME")))
 sentry = raven.Client(config['dsn'])
@@ -66,6 +65,7 @@ for cart_str in recorded_carts.keys():
             new_cut.set_valid_days(False, False, False, False, False, False, False)
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
             if type(recorded_carts[cart_str]) == list:
+                notification_data = {}  # Used for sending an email at the end
                 for action in recorded_carts[cart_str]:
                     if "action" in action:
                         debug("Processing action %s" % action, cart)
@@ -75,10 +75,13 @@ for cart_str in recorded_carts.keys():
                             auth = tuple(config['owncloud']['auth'])
                             baseURL = config['owncloud']['baseURL']
                             folder = action['folder']
-                            filename = "%s.wav" % datetime.datetime.today().strftime('%Y-%m-%d')
+                            timeformat = "%Y-%m-%d_%H:%M:%S"
+                            filename = "%s.wav" % datetime.datetime.today().strftime(timeformat)
                             with open(new_cut.get_path(), 'rb') as fh:
                                 requests.put('%s/%s/%s' % (baseURL, folder, filename),
                                              auth=auth, data=fh.read())
+                            notification_data['owncloud'] = action
+                            notification_data['owncloud']['filename'] = filename
             # TODO: Other processing (e.g. converting to MP3, etc)
     except Exception:
         sentry.captureException()
