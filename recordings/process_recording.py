@@ -67,7 +67,7 @@ for cart_str in recorded_carts.keys():
             new_cut.set_description(datetime.datetime.today().strftime('%Y-%m-%d'))
             new_cut.set_valid_days(False, False, False, False, False, False, False)
             call(['cp', '--preserve=timestamps', orig_cut.get_path(), new_cut.get_path()])
-            if type(recorded_carts[cart_str]) == list:
+            if type(recorded_carts[cart_str]) == dict:
                 # Used for sending an email at the end
                 notification_data = {
                     "show_name": cart_obj.title
