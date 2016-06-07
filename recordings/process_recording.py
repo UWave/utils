@@ -75,7 +75,7 @@ for cart_str in recorded_carts.keys():
                     "show_name": cart_obj.title
                 }
 
-                for action, data in recorded_carts[cart_str].iter_items():
+                for action, data in recorded_carts[cart_str].iteritems():
                     debug("Processing action %s" % action, cart)
                     notification_data[action] = data
                     if action == "debug":
