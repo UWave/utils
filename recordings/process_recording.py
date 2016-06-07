@@ -89,7 +89,7 @@ for cart_str in recorded_carts.keys():
                         with open(new_cut.get_path(), 'rb') as fh:
                             requests.put('%s/%s/%s' % (baseURL, folder, filename),
                                          auth=auth, data=fh.read())
-                        download = "%s/download?path=%2F&files=%s" % (data['owncloud_share_link'],
+                        download = "%s/download?path=%2F&files=%s" % (data['share_link'],
                                                                       filename)
                         notification_data['owncloud']['download_url'] = download
                 if "email" in recorded_carts[cart_str]:
