@@ -23,14 +23,15 @@ cut_files = os.listdir(AUDIO_ROOT)
 print_debug = "-d" in sys.argv
 
 
-def debug(msg, cart=None):
+def debug(msg, cart=None, debug=False):
     """Print a debug message either to the syslog or the stdout."""
     out = "[Cart -----] %s" % msg
     if cart is not None:
         out = "[Cart %0.d] %s" % (cart, msg)
     if(print_debug):
         print(out)
-    syslog.syslog(out)
+    if not debug:
+        syslog.syslog(out)
 
 
 def get_cut_fingerprint(cut):
@@ -48,14 +49,15 @@ for cart_str in recorded_carts.keys():
         cart_prefix = '%06d' % (cart)
         cuts = [c for c in cut_files if c.startswith(cart_prefix)]
         if not cuts:
-            debug("No cuts in this cart", cart)
+            debug("No cuts in this cart", cart, True)
             continue
         cuts.sort()
         fingerprint = get_cut_fingerprint(cuts[0])
         for cut in cuts[1:]:
             f = get_cut_fingerprint(cut)
             if f == fingerprint:
-                debug("Looks like cut %s is duplicate of cut 001, nothing to do here" % cut, cart)
+                debug("Looks like cut %s is duplicate of cut 001, nothing to do here" % cut, cart,
+                      True)
                 break
         else:
             debug("No duplicates, duplicating cut 001", cart)
