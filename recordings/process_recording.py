@@ -90,13 +90,13 @@ for cart_str in recorded_carts.keys():
                             requests.put('%s/%s/%s' % (baseURL, folder, filename),
                                          auth=auth, data=fh.read())
                         download = "%s/download?path=%%2F&files=%s" % (data['share_link'],
-                                                                      filename)
+                                                                       filename)
                         notification_data['owncloud']['download_url'] = download
                 if "email" in recorded_carts[cart_str]:
                     from_address = config['email']['from']
                     if type(from_address) == list:
                         from_address = tuple(from_address)
-                    to_address = recorded_carts[cart_str]['email']['to']
+                    to_address = recorded_carts[cart_str]['email']
                     template = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                             "email.html")
                     if "template" in config['email']:
