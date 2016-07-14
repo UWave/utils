@@ -8,4 +8,7 @@ client = jack.Client(os.path.basename(__file__))
 conf = json.load(open("/etc/jackmon.conf"))
 
 for p in conf['ports']:
-    client.connect(p[0], p[0])
+    try:
+        client.connect(p[0], p[1])
+    except jack.Error as e:
+        print("Error: {} for ports {} and {}".format(e, p[0], p[1]))
