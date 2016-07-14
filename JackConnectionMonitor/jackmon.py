@@ -15,7 +15,7 @@ conf = json.load(open("/etc/jackmon.conf"))
 
 for p in conf['ports']:
     try:
-        connections = client.get_all_connections(p[0])
+        connections = client.get_connections(p[0])
         if p[1] not in connections:
             logging.warning("%s wasn't connected to %s! I've connected them", p[0], p[1])
             client.connect(p[0], p[1])
