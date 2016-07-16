@@ -5,6 +5,7 @@ import os
 import json
 import logging
 import sys
+import requests
 
 
 if "-d" in sys.argv:
@@ -17,8 +18,16 @@ for p in conf['ports']:
     try:
         connections = client.get_connections(p[0])
         if p[1] not in connections:
-            logging.warning("%s wasn't connected to %s! I've connected them", p[0], p[1])
+            msg = "%s wasn't connected to %s! I've connected them" % (p[0], p[1])
+            logging.warning(msg)
             client.connect(p[0], p[1])
+            if "slack" in conf:
+                requests.post(conf['slack']['url'], data=json.dump({
+                    "channel": conf['slack']['channel'],
+                    "username": "JACKd monitor",
+                    "text": msg,
+                    "icon_emoji": "sound"
+                }))
         else:
             logging.debug("%s already connected to %s", p[0], p[1])
     except jack.Error as e:
