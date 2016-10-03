@@ -18,11 +18,11 @@ for p in conf['ports']:
     try:
         connections = client.get_connections(p[0])
         if p[1] not in connections:
-            msg = "%s wasn't connected to %s! I've connected them" % (p[0], p[1])
+            msg = "`%s` wasn't connected to `%s`! I've connected them" % (p[0], p[1])
             logging.warning(msg)
             client.connect(p[0], p[1])
             if "slack" in conf:
-                requests.post(conf['slack']['url'], data=json.dump({
+                requests.post(conf['slack']['url'], data=json.dumps({
                     "channel": conf['slack']['channel'],
                     "username": "JACKd monitor",
                     "text": msg,
